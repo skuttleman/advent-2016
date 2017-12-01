@@ -1,14 +1,10 @@
 (ns advent-2016.day-1
-    (:require [clojure.string :as s]))
-
-(defn spy [v] (println v) v)
+    (:require [advent-2016.utils.core :as u]))
 
 (def ^:private visited (atom #{}))
 
 (defn ^:private parse-input []
-    (->> (s/split (slurp "resources/day1.txt") #",")
-        (map s/trim)
-        (remove empty?)
+    (->> (u/read-file 1 #",")
         (map (fn [[turn & distance]]
                  [(if (= turn \L) first second)
                   (Integer/parseInt (apply str distance))]))))
