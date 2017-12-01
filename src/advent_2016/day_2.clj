@@ -1,8 +1,6 @@
 (ns advent-2016.day-2
     (:require [advent-2016.utils.core :as u]))
 
-(defn spy [v] (println v) v)
-
 (def ^:private keypad
     [[1 2 3]
      [4 5 6]
