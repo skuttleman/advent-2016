@@ -1,6 +1,10 @@
 (ns advent-2016.day-1
     (:require [clojure.string :as s]))
 
+(defn spy [v] (println v) v)
+
+(def ^:private visited (atom #{}))
+
 (defn ^:private parse-input []
     (->> (s/split (slurp "resources/day1.txt") #",")
         (map s/trim)
@@ -20,7 +24,6 @@
      :y (+ (:y pt1) (:y pt2))})
 
 (defn grid-distance [pt1 pt2]
-    (println pt1 pt2)
     (+ (Math/abs (- (:x pt1) (:x pt2)))
         (Math/abs (- (:y pt1) (:y pt2)))))
 
@@ -32,14 +35,36 @@
             (add position))))
 
 (defn ^:private apply-turn [{:keys [direction position]} [turn-f distance]]
-    (let [direction' (turn-f (get turn direction))
-          position' (go-from position direction' distance)]
-        {:direction direction' :position position'}))
+    (let [direction' (turn-f (get turn direction))]
+        {:direction direction' :position (go-from position direction' distance)}))
 
+(defn ^:private about-to-visit [position direction distance]
+    (loop [distance' distance positions [position]]
+        (if (zero? distance')
+            (butlast positions)
+            (let [position' (go-from (last positions) direction 1)]
+                (recur (dec distance') (conj positions position'))))))
+
+(defn ^:private apply-memoized-turn [{:keys [direction position solution]} [turn-f distance]]
+    (let [direction' (turn-f (get turn direction))]
+        (if solution
+            {:solution solution}
+            (let [positions (about-to-visit position direction' distance)]
+                (if-let [solution' (->> positions (filter @visited) (first))]
+                    {:solution solution'}
+                    (do (swap! visited into positions)
+                        {:direction direction' :position (go-from position direction' distance)}))))))
+
+;; 253
 (defn step-1 []
     (->> (parse-input)
         (reduce apply-turn {:direction :up :position {:x 0 :y 0}})
         (:position)
         (grid-distance {:x 0 :y 0})))
 
-(defn step-2 [] (println "step 2"))
+;126
+(defn step-2 []
+    (->> (parse-input)
+        (reduce apply-memoized-turn {:direction :up :position {:x 0 :y 0}})
+        (:solution)
+        (grid-distance {:x 0 :y 0})))
