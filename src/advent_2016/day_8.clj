@@ -34,8 +34,21 @@
         (filter second)
         (first)))
 
-(defn step-1 []
+(defn ^:private apply-instructions []
     (->> (u/read-file 8 #"\n")
         (map parse-instruction)
-        (reduce (fn [grid [f args]] (f grid args)) (make-grid 50 6))
+        (reduce (fn [grid [f args]] (f grid args)) (make-grid 50 6))))
+
+(defn ^:private print-grid [grid]
+    (doall (map (comp println (partial apply str)) grid))
+    grid)
+
+;;121
+(defn step-1 []
+    (->> (apply-instructions)
         (reduce (fn [total row] (+ total (count (filter (partial = \#) row)))) 0)))
+
+;; RURUCEOEIL
+(defn step-2 []
+    (->> (apply-instructions)
+        (print-grid)))
