@@ -6,17 +6,24 @@
     (->> (u/read-file 6 #"\n")
         (map seq)))
 
-(defn ^:private most-freq-letter [letters]
+(defn ^:private find-letter [sorter letters]
     (->> letters
         (group-by identity)
         (map (fn [[letter group]] [letter (count group)]))
-        (sort-by (comp (partial * -1) second))
+        (sort-by sorter)
         (map first)
         (first)))
 
-;; qtbjqiuq
-(defn step-1 []
+(defn ^:private solve [sorter]
     (->> (prep)
         (matrix/rotate)
-        (map most-freq-letter)
+        (map (partial find-letter sorter))
         (apply str)))
+
+;; qtbjqiuq
+(defn step-1 []
+    (solve (comp (partial * -1) second)))
+
+;; akothqli
+(defn step-2 []
+    (solve second))
