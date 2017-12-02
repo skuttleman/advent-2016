@@ -19,11 +19,18 @@ public class Day10 {
             .forEach(System.out::println);
     }
 
+    private static void step2() {
+        System.out.println(bins.get("0").getValues().get(0) *
+            bins.get("1").getValues().get(0) *
+            bins.get("2").getValues().get(0));
+    }
+
     public static void main(String[] args) {
         Utils.readFile("day10.txt")
             .sorted()
             .forEach(Day10::matchInstruction);
         step1();
+        step2();
     }
 
     private static void matchInstruction(String instruction) {

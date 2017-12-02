@@ -24,4 +24,8 @@ public class Bin implements Receiver {
             ", values=" + values +
             '}';
     }
+
+    public List<Integer> getValues() {
+        return values;
+    }
 }
