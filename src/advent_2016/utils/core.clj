@@ -25,3 +25,7 @@
 
 (defn map-second [f coll]
     (map (fn [[k v]] [k (f v)]) coll))
+
+(defn call [f & args]
+    (when (ifn? f)
+        (apply f args)))

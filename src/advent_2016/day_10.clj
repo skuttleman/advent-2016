@@ -48,7 +48,7 @@
 (defn ^:private find-processor [bots low high]
     (->> bots
         (vals)
-        (filter (comp #(contains? % [low high]) set #(%) :processed))
+        (filter (comp #(contains? % [low high]) set u/call :processed))
         (first)
         (:name)))
 
@@ -56,9 +56,20 @@
     (doall (map build (get instructions \b)))
     (doall (map run (get instructions \v))))
 
-;; 116
-(defn step-1 []
+(defn ^:private prep []
     (->> (u/read-file 10 #"\n")
         (group-by first)
-        (build-and-run))
+        (build-and-run)))
+
+;; 116
+(defn step-1 []
+    (prep)
     (find-processor @bots 17 61))
+
+;; 23903
+(defn step-2 []
+    (prep)
+    (->> ["0" "1" "2"]
+        (map (comp u/call :processed (partial get @bins)))
+        (flatten)
+        (reduce *)))
