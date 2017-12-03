@@ -24,7 +24,7 @@
    [day-9/step-1]
    [day-10/step-1 day-10/step-2]
    []
-   [day-12/step-1]])
+   [day-12/step-1 day-12/step-2]])
 
 (defn -main [& [day step]]
   (let [[day' step'] (map (fn [v] (-> (str "0" v)

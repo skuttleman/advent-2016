@@ -52,9 +52,16 @@
          (let [[cmd args] (get instructions line)]
              (recur registers instructions (cmd registers line args))))))
 
+(defn ^:private prep []
+    (->> (u/read-file 12 #"\n")
+        (mapv parse-instruction)))
+
 ;; 318117
 (defn step-1 []
-    (let [registers (atom {:a 0 :b 0 :c 0 :d 0})]
-        (->> (u/read-file 12 #"\n")
-            (mapv parse-instruction)
-            (run registers))))
+    (->> (prep)
+        (run (atom {:a 0 :b 0 :c 0 :d 0}))))
+
+;; 9227771
+(defn step-2 []
+    (->> (prep)
+        (run (atom {:a 0 :b 0 :c 1 :d 0}))))
